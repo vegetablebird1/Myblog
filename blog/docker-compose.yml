@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  myblog:
+    image: myblog:1.0
+    build: .
+    ports:
+      - 12306:12306
+    depends_on:
+      - mysql
+      - redis
+  nginx:
+    image: nginx:1.20.0
+    ports:
+    - 80:80
+    volumes:
+    - /home/ming/blog/nginx/html:/usr/share/nginx/html
+    - /home/ming/blog/nginx/nginx.conf:/etc/nginx/conf/nginx.conf
+    privileged: true
+  mysql:
+    image: library/mysql:5.7
+    ports:
+    - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+  redis:
+    image: library/redis:alpine

@@ -1,0 +1,67 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    username: root
+    password: 123
+    url: jdbc:mysql://localhost:3306/blog?useSSL=false&serverTimezone=Asia/Shanghai&useUnioncode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #SpringBoot默认是不注入这些的，需要自己绑定
+    #druid数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters，stat：监控统计、log4j：日志记录、wall：防御sql注入
+    #如果允许报错，java.lang.ClassNotFoundException: org.apache.Log4j.Properity
+    #则导入log4j 依赖就行
+    filters: stat,wall,log4j
+    web-stat-filter:
+      exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      enabled: true
+      url-pattern: "/*"
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+    filter:
+      stat:
+        enabled: true
+        db-type: mysql
+        log-slow-sql: true
+        slow-sql-millis: 2000
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: 123
+        reset-enable: true # 启用HTML页面上的“Reset All”功能
+        allow: "" # 设置IP白名单(没有配置或者为空，则允许所有访问)不设置部署到服务器会无法访问
+      # deny: "" # 设置ip黑名单
+      # 启用
+      enable: true
+
+shiro-redis:
+    enabled: true
+    redis-manager:
+      host: 127.0.0.1:6379
+
+jwt:
+  # 加密秘钥
+  secret: f4e2e52034348f86b67cde581c0f9eb5
+  # token有效时长，7天，单位秒
+  expire: 604800
+  header: token
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+
