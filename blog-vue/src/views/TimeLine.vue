@@ -1,19 +1,20 @@
 <template>
   <div>
+    <Header></Header>
 
-    <div><Header></Header></div>
+    <div id="timeLine_body">
+      <el-timeline class="timeLine_content">
+        <el-timeline-item :timestamp="article.createTime" placement="top" v-for="article in articles">
+          <el-card style="border-radius: 10px">
+            <p><router-link class="detail_link" :to="{name: 'ArticleDetail',params: {articleId: article.articleId}}">{{article.title}}</router-link></p>
+          </el-card>
+        </el-timeline-item>
 
-
-    <div id="articles_body" v-cloak>
-      <el-card class="box-card" v-for="article in articles">
-        <span id="a_title"><router-link class="a_detailLink" :to="{name: 'ArticleDetail',params: {articleId: article.articleId}}">{{article.title}}</router-link></span>
-        <el-divider></el-divider>
-        <span><p>{{article.digest}}</p></span>
-      </el-card>
+      </el-timeline>
     </div>
 
     <div>
-      <el-pagination class="a_page"
+      <el-pagination class="page_divide"
                      :page-size="pageSize"
                      :page-count="10"
                      layout="prev, pager, next"
@@ -24,20 +25,18 @@
       </el-pagination>
     </div>
 
-
-    <div v-cloak><Footer></Footer></div>
-
+    <div><Footer></Footer></div>
   </div>
 </template>
 
 <script>
-
-import {getArticles} from "@/api/article";
 import Header from "@/components/Header";
+import {getArticles} from "@/api/article";
 import Footer from "@/components/Footer";
 export default {
-  name: "Articles",
+  name: "TimeLine",
   components: {Footer, Header},
+
   data() {
     return {
       articles: {},
@@ -57,51 +56,28 @@ export default {
         this.pageSize = res.data.data.size
       })
     }
-
   },
+
   created() {
     this.page(1)
   }
 }
-
 </script>
+
 
 <style scoped>
 
-* {
-  margin: 0 auto;
-  padding: 0;
-}
-
-#articles_body {
+#timeLine_body {
   width: 1100px;
-  margin: 60px auto ;
+  margin: 60px auto;
 }
 
-.box-card {
-  margin: 25px;
-  border-radius: 10px;
-}
-
-#a_title {
-  font-size: 25px;
-}
-
-.a_detailLink {
-  text-decoration: none;
-}
-
-.a_detailLink:hover {
-  color: #14a09f;
-}
-
-
-.a_page {
-  margin: 50px 0 auto;
+.page_divide {
   text-align: center;
+
 }
 
-[v-cloak] {
-  display: none;
+.detail_link {
+  text-decoration: none;
 }
 </style>

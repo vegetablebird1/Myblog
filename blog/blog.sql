@@ -76,7 +76,6 @@ CREATE TABLE `t_user`  (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES (1, 'ming', '4a7539f81ebdf43f8e29d063a3f37347', 'https://himg.bdimg.com/sys/portraitn/item/68b37a6a6d717131353897be', '123@163.com', 0, '2021-05-05 17:33:58', '2021-05-10 12:47:21');
-INSERT INTO `t_user` VALUES (7, '121', '123', NULL, NULL, 0, '2021-05-10 12:45:42', '2021-05-10 12:45:42');
+INSERT INTO `t_user` VALUES (1, 'ming', 'e10adc3949ba59abbe56e057f20f883e', 'https://himg.bdimg.com/sys/portraitn/item/68b37a6a6d717131353897be', '123@163.com', 0, '2021-05-05 17:33:58', '2021-05-10 12:47:21');
 
 SET FOREIGN_KEY_CHECKS = 1;

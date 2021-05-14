@@ -29,7 +29,6 @@
 <script>
 import {login} from "@/api/login";
 import router from "@/router";
-import request from "@/request";
 
 export default {
   name: "Login",
@@ -37,8 +36,8 @@ export default {
   data() {
     return {
       ruleForm: {
-        username: '',
-        password: '',
+        username: 'ming',
+        password: 'qq1585454628',
       },
       rules: {
         username: [

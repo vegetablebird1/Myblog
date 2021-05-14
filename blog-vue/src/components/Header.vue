@@ -1,83 +1,78 @@
 <template>
-  <div class="b_header">
 
-    <h1>欢迎来到Ming的博客</h1>
-
-    <div class="block">
-      <el-avatar :size="50" :src="user.avatar"></el-avatar>
+  <!-- 导航栏 -->
+  <div>
+    <div class="nav">
+      <el-menu class="el-menu-button" mode="horizontal">
+        <el-menu-item index="-1"><a href="/articles"><el-avatar :src="user.avatar"></el-avatar></a></el-menu-item>
+        <el-menu-item index="0"><a href="/articles">欢迎来到Ming的博客</a></el-menu-item>
+        <el-menu-item v-if="isLogin" index="6"><router-link :to="{path: '/article/add'}">发表博客</router-link></el-menu-item>
+        <el-menu-item class="nav_button" index="1"><a href="/articles">主页</a></el-menu-item>
+        <el-menu-item class="nav_button" index="2"><a href="/timeLine">时间线</a></el-menu-item>
+        <el-menu-item v-if="!isLogin" class="nav_button" index="3"><a href="/login" >登陆</a></el-menu-item>
+        <el-menu-item v-if="isLogin" class="nav_button" index="4" @click="userLogout"><a>退出登陆</a></el-menu-item>
+        <el-menu-item class="nav_button" index="5"><a href="/aboutMe" >关于我</a></el-menu-item>
+      </el-menu>
     </div>
 
-    <div class="divider">
-
-      <span><el-link type="warning" href="/articles">主页</el-link></span>
-      <el-divider v-show="hasLogin" direction="vertical"></el-divider>
-      <span v-show="hasLogin"><el-link type="success" href="/article/add">发表博客</el-link></span>
-      <el-divider  direction="vertical"></el-divider>
-      <span v-show="!hasLogin"><el-link type="primary" href="/login">登录</el-link></span>
-
-      <span v-show="hasLogin"><el-link type="danger" @click="userLogout">退出</el-link></span>
-    </div>
   </div>
+
 </template>
 
 <script>
-import request from "@/request";
 import {logout} from "@/api/login";
+import router from "@/router";
 
 export default {
   name: "Header",
-  data() {
+  data(){
     return {
-      user:{
-        username: '',
-        avatar: 'https://himg.bdimg.com/sys/portraitn/item/68b37a6a6d717131353897be',
-
+      isLogin: false,
+      user: {
+        username: 'Ming',
+        avatar: 'https://himg.bdimg.com/sys/portraitn/item/68b37a6a6d717131353897be'
       },
-      hasLogin: false
+      searchKey: '',
     }
   },
-  methods: {
+
+  methods:{
     userLogout() {
-      const _this = this;
-      // request.get("/logout",{
-      //   headers: {
-      //     "Authorization": localStorage.getItem("token")
-      //   }
-      // }).then(res => {
-      //   _this.$store.commit("REMOVE_INFO");
-      //   _this.$router.push("/login");
-      // })
-
       logout().then(res => {
-        _this.$store.commit("REMOVE_INFO")
-        _this.$router.push('/login')
+        this.$store.commit('REMOVE_INFO')
+        router.push('/login')
       })
-
     }
   },
 
   created() {
-    console.log("++++++++++++")
     if (this.$store.getters.getUser.username){
-      this.user.username = this.$store.getters.getUser.username
-      this.user.avatar = this.$store.getters.getUser.avatar
-      this.hasLogin = true
-      console.log("************")
+      this.isLogin = true;
     }
-    console.log('++++++++++++')
   }
 }
 </script>
 
+
 <style scoped>
 
-.b_header{
-  max-width: 960px;
-  margin: 0 auto;
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.divider{
-  margin: 50px;
+a {
+  text-decoration: none;
 }
+
+a:hover {
+  color: #B3C0D1;
+}
+
+.nav_button{
+  position: relative;
+  left: 900px;
+}
+
+
 </style>

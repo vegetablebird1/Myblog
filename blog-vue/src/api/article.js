@@ -40,4 +40,15 @@ export function editArticle(article) {
         })
 }
 
+//删除文章
+export function delArticleById(articleId){
+    return request({
+        url: `/article/delete/${articleId}`,
+        method: 'get',
+        headers: {
+            'Authorization': localStorage.getItem("token")
+        }
+    })
+}
+
 

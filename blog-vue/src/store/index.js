@@ -26,6 +26,7 @@ export default new Vuex.Store({
       state.userInfo = ''
       localStorage.setItem("token","")
       sessionStorage.setItem("userInfo",JSON.stringify(''))
+      sessionStorage.setItem('isLogin',JSON.stringify(false))
     }
 
   },

@@ -67,4 +67,17 @@ public class ArticleController {
         return Result.success(null);
     }
 
+
+    //删除文章
+    @RequiresAuthentication
+    @GetMapping("/article/delete/{id}")
+    public Result delete(@PathVariable Long id){
+        //逻辑删除，管理员可回收
+        boolean flag = articleService.removeById(id);
+        if (flag){
+            return Result.success("删除成功");
+        }else {
+            return Result.fail("删除失败");
+        }
+    }
 }

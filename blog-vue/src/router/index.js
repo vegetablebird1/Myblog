@@ -4,6 +4,8 @@ import Articles from "@/views/Articles";
 import Login from "@/views/Login";
 import ArticleEdit from "@/views/ArticleEdit";
 import ArticleDetail from "@/views/ArticleDetail";
+import TimeLine from "@/views/TimeLine";
+import AboutMe from "@/views/AboutMe";
 
 Vue.use(VueRouter)
 
@@ -43,6 +45,16 @@ const routes = [
         meta: {
             requireAuth: true
         }
+    },
+    {
+        path: '/timeLine',
+        name: 'TimeLine',
+        component: TimeLine
+    },
+    {
+        path: '/aboutMe',
+        name: 'AboutMe',
+        component: AboutMe
     }
 ]
 

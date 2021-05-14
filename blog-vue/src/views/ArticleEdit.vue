@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Header></Header>
+    <div><Header></Header></div>
 
-    <div class="m-content">
+    <div id="edit_body">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="标题" prop="title">
           <el-input v-model="ruleForm.title"></el-input>
@@ -23,7 +23,7 @@
           <mavon-editor v-model="ruleForm.content"></mavon-editor>
         </el-form-item>
 
-        <el-form-item>
+        <el-form-item class="edit_button">
           <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
           <el-button><router-link class="return_button" to="/articles">返回主界面</router-link></el-button>
@@ -120,8 +120,15 @@ export default {
 
 
 <style scoped>
-.m-content {
-  text-align: center;
+
+#edit_body {
+  width: 1100px;
+  margin: 60px auto;
+}
+
+.edit_button {
+  position: relative;
+  left: 350px;
 }
 
 .return_button {
