@@ -25,7 +25,8 @@
 
 主界面
 
-![image-20210515224415993](C:\Users\zjm2000\AppData\Roaming\Typora\typora-user-images\image-20210515224415993.png)
+![image](https://user-images.githubusercontent.com/55617130/118366089-e5047900-b5d1-11eb-85e7-4a386edf223c.png)
+
 
 
 
