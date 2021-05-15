@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     username: root
-    password: 123456
+    password: x
     url: jdbc:mysql://mysql:3306/blog?useSSL=false&useUnioncode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
@@ -42,8 +42,8 @@ spring:
         slow-sql-millis: 2000
       stat-view-servlet:
         enabled: true
-        login-username: admin
-        login-password: 123
+        login-username: xxx
+        login-password: xxx
         reset-enable: true # 启用HTML页面上的“Reset All”功能
         allow: "" # 设置IP白名单(没有配置或者为空，则允许所有访问)不设置部署到服务器会无法访问
       # deny: "" # 设置ip黑名单
