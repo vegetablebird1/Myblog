@@ -5,8 +5,12 @@
 
 
     <div id="articles_body" v-cloak>
-      <el-card class="box-card" v-for="article in articles">
-        <span id="a_title"><router-link class="a_detailLink" :to="{name: 'ArticleDetail',params: {articleId: article.articleId}}">{{article.title}}</router-link></span>
+      <el-card class="box-card" v-for="article in articles" :key="article">
+        <span id="a_title">
+          <router-link class="a_detailLink" :to="{name: 'ArticleDetail',params: {articleId: article.articleId}}">
+            {{article.title}}
+          </router-link>
+        </span>
         <el-divider></el-divider>
         <span><p>{{article.digest}}</p></span>
       </el-card>
@@ -24,8 +28,8 @@
       </el-pagination>
     </div>
 
-
     <div v-cloak><Footer></Footer></div>
+
 
   </div>
 </template>
@@ -57,7 +61,6 @@ export default {
         this.pageSize = res.data.data.size
       })
     }
-
   },
   created() {
     this.page(1)
@@ -66,7 +69,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 
 * {
   margin: 0 auto;

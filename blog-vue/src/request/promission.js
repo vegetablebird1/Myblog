@@ -7,8 +7,6 @@ router.beforeEach((to, from, next) => {
         //判断路由是否需要登录权限
         const token = localStorage.getItem("token");
 
-        console.log("---------" + token);
-
         //有token
         if (token) {
             next()

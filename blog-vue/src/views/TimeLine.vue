@@ -65,7 +65,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
 
 #timeLine_body {
   width: 1100px;

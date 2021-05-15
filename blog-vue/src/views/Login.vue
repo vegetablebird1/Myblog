@@ -1,27 +1,29 @@
 <template>
-  <div>
+  <div id="login_body">
+    <div><Header></Header></div>
+    <div id="login_card">
+      <el-card style="border-radius: 15px">
+        <div style="text-align: center;font-size: 25px;"><span>登录</span></div>
+        <el-main>
+          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="ruleForm.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input type="password" v-model="ruleForm.password"></el-input>
+            </el-form-item>
 
-    <el-container>
-      <el-header>
-        <img class="mylogo" src="https://himg.bdimg.com/sys/portraitn/item/public.1.bd6544f9.ytoTzR3bMXE5HR0Y2udY9w">
-      </el-header>
-      <el-main>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="ruleForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input type="password" v-model="ruleForm.password"></el-input>
-          </el-form-item>
 
+            <el-form-item>
+              <el-button id="submit_button" type="primary" @click="submitForm('ruleForm')">登陆</el-button>
+              <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-main>
+      </el-card>
 
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </el-main>
-    </el-container>
+    </div>
+
 
   </div>
 </template>
@@ -29,15 +31,16 @@
 <script>
 import {login} from "@/api/login";
 import router from "@/router";
+import Header from "@/components/Header";
 
 export default {
   name: "Login",
-
+  components: {Header},
   data() {
     return {
       ruleForm: {
-        username: 'ming',
-        password: 'qq1585454628',
+        username: '',
+        password: '',
       },
       rules: {
         username: [
@@ -84,25 +87,12 @@ export default {
 
 <style scoped>
 
-.el-header, .el-footer {
-  background-color: #B3C0D1;
-  color: #333;
-  text-align: center;
-  line-height: 60px;
-}
-
-.el-aside {
-  background-color: #D3DCE6;
-  color: #333;
-  text-align: center;
-  line-height: 200px;
-}
-
 .el-main {
   /*background-color: #E9EEF3;*/
   color: #333;
   text-align: center;
   line-height: 160px;
+  margin-left: -30px;
 }
 
 body > .el-container {
@@ -118,14 +108,29 @@ body > .el-container {
   line-height: 320px;
 }
 
-.mylogo{
-  height: 60%;
-  /*离顶部位置*/
-  margin-top: 10px;
-}
 .demo-ruleForm{
   max-width: 500px;
   margin: 0 auto;
+}
+
+#login_body {
+  width: 100%;
+  height: 738px;
+
+  background-color: #8EC5FC;
+  background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 50%, #5179cd 100%);
+  background-position: top center;
+}
+
+#login_card {
+  width: 500px;
+  height: 300px;
+  margin: 180px auto;
+}
+
+#submit_button {
+  position: relative;
+  left: -40px;
 }
 
 </style>

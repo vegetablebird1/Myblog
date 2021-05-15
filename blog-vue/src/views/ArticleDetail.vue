@@ -13,11 +13,6 @@
           </el-button>
           <span style="font-size: 20px;line-height: 50px">{{article.title}}</span>
           <el-button v-if="owner" id="del_button" type="danger" plain @click="delArticle(article.articleId)">删除</el-button>
-<!--          <el-link v-if="owner" style="float: right; padding: 13px 10px" icon="el-icon-edit" >-->
-<!--            <router-link class="link_button" :to="{name: 'ArticleEdit',params: {articleId: article.articleId}}">-->
-<!--              编辑-->
-<!--            </router-link>-->
-<!--          </el-link>-->
           <router-link v-if="owner" :to="{name: 'ArticleEdit',params: {articleId: article.articleId}}">
             <el-button id="edit_button" type="primary" plain>编辑</el-button>
           </router-link>
@@ -90,7 +85,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 * {
   margin: 0 auto;

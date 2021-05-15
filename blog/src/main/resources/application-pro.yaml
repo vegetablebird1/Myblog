@@ -1,11 +1,11 @@
 server:
-  port: 12306
+  port: 8000
 
 spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://mysql:3306/blog?useSSL=false&serverTimezone=Asia/Shanghai&useUnioncode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/blog?useSSL=false&useUnioncode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
