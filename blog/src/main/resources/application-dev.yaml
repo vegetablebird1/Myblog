@@ -50,6 +50,11 @@ spring:
       # 启用
       enable: true
 
+  #redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
 shiro-redis:
     enabled: true
     redis-manager:
@@ -64,4 +69,6 @@ jwt:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
