@@ -16,7 +16,7 @@ services:
     volumes:
     - /home/ming/blog/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=设置你的密码
+      - MYSQL_ROOT_PASSWORD=123456
   redis:
     image: library/redis:latest
     ports:

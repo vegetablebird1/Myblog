@@ -7,8 +7,8 @@ import router from '../router'
 import store from '../store'
 
 const request = axios.create({
-    // baseURL: "http://localhost:8000",
 
+    //baseURL: "http://47.107.36.140:8000",
     baseURL: "http://localhost:8000",
 
     //超时时间5s
