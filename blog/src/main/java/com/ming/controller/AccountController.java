@@ -8,10 +8,10 @@ import com.ming.common.lang.Result;
 import com.ming.entity.User;
 import com.ming.service.UserService;
 import com.ming.utils.JwtUtils;
-import lombok.extern.log4j.Log4j;
-import org.apache.log4j.Level;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 
-@Log4j
 @RestController
 public class AccountController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
     UserService userService;
@@ -46,7 +48,7 @@ public class AccountController {
         user.setLastLogin(time);
         userService.updateById(user);
 
-        log.log(Level.INFO, "\n=================\n" + user.getUsername() + "登陆成功" + "\n=================\n");
+        LOGGER.info("\n=================\n" + user.getUsername() + "登陆成功" + "\n=================\n");
 
         String jwt = jwtUtils.generateToken(user.getUserId());
 

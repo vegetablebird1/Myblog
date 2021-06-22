@@ -1,8 +1,9 @@
 package com.ming.common.exception;
 
 import com.ming.common.lang.Result;
-import org.apache.log4j.Logger;
 import org.apache.shiro.ShiroException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -17,12 +18,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    Logger logger = Logger.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
     public Result handler(RuntimeException e){
-        logger.error("出现运行时异常",e);
+        LOGGER.error("出现运行时异常",e);
         return Result.fail(e.getMessage());
     }
 
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = ShiroException.class)
     public Result handler(ShiroException e){
-        logger.error("出现运行时异常------------>",e);
+        LOGGER.error("出现运行时异常------------>",e);
         return Result.fail(401,e.getMessage(),null);
     }
 
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result handler(MethodArgumentNotValidException e){
-        logger.error("实体校验异常------------>",e);
+        LOGGER.error("实体校验异常------------>",e);
 
         BindingResult bindingResult = e.getBindingResult();
         ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result handler(IllegalArgumentException e){
-        logger.error("Assert------------>",e);
+        LOGGER.error("Assert------------>",e);
 
         return Result.fail(e.getMessage());
     }
