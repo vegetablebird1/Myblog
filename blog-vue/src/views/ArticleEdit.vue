@@ -68,7 +68,7 @@ export default {
 
       //文章种类
       categories: {},
-      categoryName: ''
+      categoryName: '请选择文章的类别'
     };
   },
   methods: {
