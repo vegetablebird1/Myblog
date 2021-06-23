@@ -1,9 +1,11 @@
 package com.ming.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ming.common.VO.ArticleVO;
 import com.ming.entity.Article;
 import com.ming.mapper.ArticleMapper;
 import com.ming.service.ArticleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
+    @Autowired
+    ArticleMapper articleMapper;
+
+
+    @Override
+    public ArticleVO queryArticleById(Long id) {
+        return articleMapper.queryArticleVOById(id);
+    }
 }

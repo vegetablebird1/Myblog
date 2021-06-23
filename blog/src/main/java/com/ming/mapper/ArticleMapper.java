@@ -1,7 +1,8 @@
 package com.ming.mapper;
 
-import com.ming.entity.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ming.common.VO.ArticleVO;
+import com.ming.entity.Article;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,6 +17,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleMapper extends BaseMapper<Article> {
 
-    Article queryBook(Long id);
+    ArticleVO queryArticleVOById(Long id);
 
 }

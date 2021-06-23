@@ -5,8 +5,12 @@
 
 <mapper namespace="com.ming.mapper.ArticleMapper">
 
-    <select id="queryBook" resultType="com.ming.entity.Article">
-        select * from t_article where article_id=#{id}
+    <select id="queryArticleVOById" resultType="com.ming.common.VO.ArticleVO">
+        select article_id,user_id,category_name,title,digest,content
+        from t_article a
+        join t_category c
+        on a.category_id=c.category_id
+        where a.article_id=#{id}
     </select>
 
 </mapper>

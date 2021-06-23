@@ -1,5 +1,6 @@
 package com.ming.service;
 
+import com.ming.common.VO.ArticleVO;
 import com.ming.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-05-05
  */
 public interface ArticleService extends IService<Article> {
+
+    ArticleVO queryArticleById(Long id);
 
 }

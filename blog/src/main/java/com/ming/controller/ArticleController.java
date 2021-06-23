@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ming.common.VO.ArticleVO;
 import com.ming.common.lang.Result;
 import com.ming.entity.Article;
 import com.ming.service.ArticleService;
@@ -58,17 +59,17 @@ public class ArticleController {
     //查询文章详情
     @GetMapping("/article/{id}")
     public Result detail(@PathVariable Long id){
-        Article article = null;
+        ArticleVO article = null;
         String articleInfo = (String) redisTemplate.opsForValue().get(ARTICLE_PREFIX_NAME + id);
         if (articleInfo != null) {
             try {
-                article = objectMapper.readValue(articleInfo,Article.class);
+                article = objectMapper.readValue(articleInfo, ArticleVO.class);
             } catch (JsonProcessingException e) {
                 LOGGER.error("JSON反序列化出错",e);
             }
             return Result.success(article);
         }
-        article = articleService.getById(id);
+        article = articleService.queryArticleById(id);
         Assert.notNull(article,"该博客已被删除");
 
         try {
