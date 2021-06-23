@@ -9,7 +9,7 @@
         </el-form-item>
 
         <el-form-item label="文章类别" prop="categoryId">
-          <el-select v-model="ruleForm.categoryId" placeholder="请输入文章类别">
+          <el-select v-model="ruleForm.categoryId" :placeholder="this.categoryName">
             <el-option v-for="category in categories" :key="category" :label="category.categoryName" :value="category.categoryId" ></el-option>
           </el-select>
         </el-form-item>
@@ -106,22 +106,20 @@ export default {
   created() {
     //取出edit中的articleId参数,如果为修改操作
     const articleId = this.$route.params.articleId
-    console.log(articleId)
     if (articleId) {
       getArticleDetail(articleId).then(res => {
         const article = res.data.data;
         this.ruleForm.articleId = article.articleId
-        this.ruleForm.categoryId = article.categoryName
         this.ruleForm.title = article.title
+        this.categoryName = article.categoryName
         this.ruleForm.digest = article.digest
         this.ruleForm.content = article.content
       })
-
-      getCategory().then(res => {
-        this.categories = res.data.data;
-      })
-
     }
+
+    getCategory().then(res => {
+      this.categories = res.data.data;
+    })
   }
 }
 </script>
