@@ -20,7 +20,7 @@
         </div>
 
 
-        <div class="markdown-body" v-html="article.content"></div>
+        <div class="markdown-body" v-html="html"> </div>
 
       </el-card>
     </div>
@@ -43,8 +43,8 @@ export default {
         title: 'title',
         digest: 'digest',
         content: 'content',
-
       },
+      html: '',
       owner: false
     }
   },
@@ -67,18 +67,19 @@ export default {
   created() {
     const articleId = this.$route.params.articleId;
     getArticleDetail(articleId).then(res => {
-      const article = res.data.data;
-      this.article.articleId = article.articleId;
-      this.article.title = article.title;
+      const article = res.data.data
+      this.article.articleId = article.articleId
+      this.article.title = article.title
 
       //渲染markdown编辑器的格式
-      const MarkDownIt = require("markdown-it");
+      const MarkDownIt = require("markdown-it")
       const md = new MarkDownIt();
 
-      const result = md.render(article.content);
+      const result = md.render(article.content)
 
-      this.article.digest = article.digest;
-      this.article.content = result;
+      this.article.digest = article.digest
+      this.article.content = article.content
+      this.html = result
       this.owner = (article.userId === this.$store.getters.getUser.userId)
     })
   }

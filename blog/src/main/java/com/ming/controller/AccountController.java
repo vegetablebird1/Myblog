@@ -48,7 +48,7 @@ public class AccountController {
         user.setLastLogin(time);
         userService.updateById(user);
 
-        LOGGER.info("\n=================\n" + user.getUsername() + "登陆成功" + "\n=================\n");
+        LOGGER.info("用户 [{}] 登陆成功!",user.getUsername());
 
         String jwt = jwtUtils.generateToken(user.getUserId());
 
@@ -69,6 +69,12 @@ public class AccountController {
     public Result logout(){
         SecurityUtils.getSubject().logout();
         return Result.success(null);
+    }
+
+    @GetMapping("/isLogin")
+    public Result isLogin() {
+        boolean login = SecurityUtils.getSubject().isAuthenticated();
+        return Result.success(login);
     }
 
 }

@@ -87,7 +87,7 @@ export default {
             this.$alert('操作成功', '信息', {
               confirmButtonText: '确定',
               callback: action => {
-                _this.$router.push("/articles")
+                this.$router.push("/articles")
               }
             });
 

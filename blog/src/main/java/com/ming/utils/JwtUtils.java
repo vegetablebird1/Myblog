@@ -4,9 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -14,11 +14,12 @@ import java.util.Date;
 /**
  * jwt工具类,绑定blog前缀，用于生成jwt
  */
-@Slf4j
 @Data
 @Component
 @ConfigurationProperties(prefix = "jwt")
 public class JwtUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
     private String secret;
     private long expire;
@@ -48,7 +49,7 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
         }catch (Exception e){
-            log.debug("validate is token error ", e);
+            LOGGER.debug("validate is token error ", e);
             return null;
         }
     }

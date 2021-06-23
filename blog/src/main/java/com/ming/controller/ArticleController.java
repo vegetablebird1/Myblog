@@ -43,14 +43,15 @@ public class ArticleController {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
 
+    private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
+    private static final String VIEW_NUMBER = "view:number";
 
     //分页展示所有文章
     @GetMapping("/articles")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage){
+        redisTemplate.opsForValue().increment(VIEW_NUMBER);
         Page page = new Page(currentPage,5);
         IPage iPage = articleService.page(page,new QueryWrapper<Article>().orderByDesc("create_time"));
         return Result.success(iPage);
