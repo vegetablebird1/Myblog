@@ -59,27 +59,27 @@ export default {
           }
         });
       })
-    }
+    },
+
+
   },
 
   created() {
     const articleId = this.$route.params.articleId;
-    console.log(articleId);
-    const _this = this;
     getArticleDetail(articleId).then(res => {
       const article = res.data.data;
-      _this.article.articleId = article.articleId;
-      _this.article.title = article.title;
+      this.article.articleId = article.articleId;
+      this.article.title = article.title;
 
       //渲染markdown编辑器的格式
-      var MarkDownIt = require("markdown-it");
-      var md = new MarkDownIt()
+      const MarkDownIt = require("markdown-it");
+      const md = new MarkDownIt();
 
-      var result = md.render(article.content);
+      const result = md.render(article.content);
 
-      _this.article.digest = article.digest;
-      _this.article.content = result;
-      _this.owner = (article.userId === _this.$store.getters.getUser.userId)
+      this.article.digest = article.digest;
+      this.article.content = result;
+      this.owner = (article.userId === this.$store.getters.getUser.userId)
     })
   }
 }
