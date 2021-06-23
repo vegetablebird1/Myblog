@@ -8,10 +8,9 @@
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="文章类别" prop="categoryId">
-          <el-select v-model="ruleForm.categoryId" placeholder="请输入文章类别">
-            <el-option label="Java" value="1"></el-option>
-            <el-option label="Linux" value="2"></el-option>
+        <el-form-item label="文章类别" prop="categoryName">
+          <el-select v-model="ruleForm.categoryName" placeholder="请输入文章类别">
+            <el-option v-for="category in categories" :key="category" :label="category.categoryName" :value="category.categoryId" ></el-option>
           </el-select>
         </el-form-item>
 
@@ -37,6 +36,7 @@
 <script>
 import Header from "@/components/Header";
 import {editArticle, getArticleDetail} from "@/api/article";
+import {getCategory} from "@/api/category";
 export default {
   name: "ArticleEdit",
   components: {Header},
@@ -45,7 +45,7 @@ export default {
     return {
       ruleForm: {
         articleId: '',
-        categoryId: '',
+        categoryName: '',
         title: '',
         digest: '',
         content: ''
@@ -55,7 +55,7 @@ export default {
           { required: true, message: '请输入标题', trigger: 'blur' },
           { min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur' }
         ],
-        categoryId: [
+        categoryName: [
           { required: true, message: '请选择文章标签', trigger: 'blur' }
         ],
         digest: [
@@ -64,7 +64,10 @@ export default {
         content: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ]
-      }
+      },
+
+      //文章种类
+      categories: {}
     };
   },
   methods: {
@@ -108,11 +111,16 @@ export default {
       getArticleDetail(articleId).then(res => {
         const article = res.data.data;
         _this.ruleForm.articleId = article.articleId
-        _this.ruleForm.categoryId = article.categoryId
+        _this.ruleForm.categoryName = article.categoryName
         _this.ruleForm.title = article.title
         _this.ruleForm.digest = article.digest
         _this.ruleForm.content = article.content
       })
+
+      getCategory().then(res => {
+        this.categories = res.data.data;
+      })
+
     }
   }
 }
