@@ -45,7 +45,7 @@ export default {
     return {
       ruleForm: {
         articleId: '',
-        categoryName: '',
+        categoryId: '',
         title: '',
         digest: '',
         content: ''
