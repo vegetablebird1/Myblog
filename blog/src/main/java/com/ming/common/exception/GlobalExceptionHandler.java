@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
     public Result handler(RuntimeException e){
-        LOGGER.error("出现运行时异常",e);
+        LOGGER.error("出现未知的运行时异常",e);
         return Result.fail(e.getMessage());
     }
 
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = ShiroException.class)
     public Result handler(ShiroException e){
-        LOGGER.error("出现运行时异常------------>",e);
+        LOGGER.error("未经认证,不能进行此的操作!",e);
         return Result.fail(401,e.getMessage(),null);
     }
 
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result handler(MethodArgumentNotValidException e){
-        LOGGER.error("实体校验异常------------>",e);
+        LOGGER.error("实体校验异常,数据有误",e);
 
         BindingResult bindingResult = e.getBindingResult();
         ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result handler(IllegalArgumentException e){
-        LOGGER.error("Assert------------>",e);
+        LOGGER.error("数据Assert错误",e);
 
         return Result.fail(e.getMessage());
     }

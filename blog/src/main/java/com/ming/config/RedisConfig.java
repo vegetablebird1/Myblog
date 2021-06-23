@@ -43,44 +43,45 @@ public class RedisConfig {
      * @param redisConnectionFactory
      * @return
      */
+//     @Bean
+//     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+//         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+//         redisTemplate.setConnectionFactory(redisConnectionFactory);
+// //        JdkSerializationRedisSerializer jdkSerializationRedisSerializer = new JdkSerializationRedisSerializer();
+//         GenericJackson2JsonRedisSerializer jackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+//
+//         // 设置值（value）的序列化采用FastJsonRedisSerializer。
+//         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+// //        redisTemplate.setHashValueSerializer(fastJsonRedisSerializer);
+//         // 设置键（key）的序列化采用StringRedisSerializer。
+//         redisTemplate.setKeySerializer(new StringRedisSerializer());
+//         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+//         redisTemplate.afterPropertiesSet();
+//         return redisTemplate;
+//     }
+
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-//        JdkSerializationRedisSerializer jdkSerializationRedisSerializer = new JdkSerializationRedisSerializer();
-        GenericJackson2JsonRedisSerializer jackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+        //首先解决key的序列化方式
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringRedisSerializer);
+        //解决value的序列化方式
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        //SimpleModule simpleModule = new SimpleModule();
+        //objectMapper.registerModule(simpleModule);
+        // 解决jackson2无法反序列化LocalDateTime的问题
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
 
-        // 设置值（value）的序列化采用FastJsonRedisSerializer。
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-//        redisTemplate.setHashValueSerializer(fastJsonRedisSerializer);
-        // 设置键（key）的序列化采用StringRedisSerializer。
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
-
-
-    // public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-    //     RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-    //     redisTemplate.setConnectionFactory(redisConnectionFactory);
-    //     //首先解决key的序列化方式
-    //     StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-    //     redisTemplate.setKeySerializer(stringRedisSerializer);
-    //     //解决value的序列化方式
-    //     Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-    //     ObjectMapper objectMapper = new ObjectMapper();
-    //     //SimpleModule simpleModule = new SimpleModule();
-    //     //objectMapper.registerModule(simpleModule);
-    //     // 解决jackson2无法反序列化LocalDateTime的问题
-    //     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    //     objectMapper.registerModule(new JavaTimeModule());
-    //
-    //     objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-    //     jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-    //     redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-    //     return redisTemplate;
-    // }
 
 
 }

@@ -16,4 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleMapper extends BaseMapper<Article> {
 
+    Article queryBook(Long id);
+
 }

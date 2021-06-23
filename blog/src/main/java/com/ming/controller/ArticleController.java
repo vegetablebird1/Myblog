@@ -4,17 +4,23 @@ package com.ming.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.lang.Result;
 import com.ming.entity.Article;
 import com.ming.service.ArticleService;
 import com.ming.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -31,7 +37,15 @@ public class ArticleController {
     ArticleService articleService;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
+
 
     //分页展示所有文章
     @GetMapping("/articles")
@@ -44,9 +58,25 @@ public class ArticleController {
     //查询文章详情
     @GetMapping("/article/{id}")
     public Result detail(@PathVariable Long id){
-        Article article = articleService.getById(id);
+        Article article = null;
+        String articleInfo = (String) redisTemplate.opsForValue().get(ARTICLE_PREFIX_NAME + id);
+        if (articleInfo != null) {
+            try {
+                article = objectMapper.readValue(articleInfo,Article.class);
+            } catch (JsonProcessingException e) {
+                LOGGER.error("JSON反序列化出错",e);
+            }
+            return Result.success(article);
+        }
+        article = articleService.getById(id);
         Assert.notNull(article,"该博客已被删除");
 
+        try {
+            articleInfo = objectMapper.writeValueAsString(article);
+            redisTemplate.opsForValue().set(ARTICLE_PREFIX_NAME + id, articleInfo, 5, TimeUnit.MINUTES);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("JSON序列化出错",e);
+        }
         return Result.success(article);
     }
 
@@ -66,6 +96,9 @@ public class ArticleController {
         }
         BeanUtils.copyProperties(article,temp,"articleId","userId","create_time","update_time");
 
+        if(article.getArticleId() != null) {
+            redisTemplate.delete(ARTICLE_PREFIX_NAME + article.getArticleId());
+        }
 
         articleService.saveOrUpdate(temp);
         return Result.success(null);
@@ -79,6 +112,7 @@ public class ArticleController {
         //逻辑删除，管理员可回收
         boolean flag = articleService.removeById(id);
         if (flag){
+            redisTemplate.delete(ARTICLE_PREFIX_NAME + id);
             return Result.success("删除成功");
         }else {
             return Result.fail("删除失败");

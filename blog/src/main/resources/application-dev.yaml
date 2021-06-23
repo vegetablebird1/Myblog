@@ -68,7 +68,8 @@ jwt:
   header: token
 
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**Mapper.xml
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.ming.entity
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
