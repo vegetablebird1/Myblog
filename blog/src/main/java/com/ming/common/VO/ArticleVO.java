@@ -24,6 +24,7 @@ public class ArticleVO implements Serializable {
 
     private Long articleId;
 
+    @NotBlank(message = "文章类别不能为空")
     private String categoryName;
 
     private Long userId;

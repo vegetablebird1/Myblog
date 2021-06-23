@@ -24,7 +24,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
 
     @Override
-    public ArticleVO queryArticleById(Long id) {
+    public ArticleVO queryArticleVOById(Long id) {
         return articleMapper.queryArticleVOById(id);
     }
 }

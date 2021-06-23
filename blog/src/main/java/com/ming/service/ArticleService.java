@@ -14,6 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ArticleService extends IService<Article> {
 
-    ArticleVO queryArticleById(Long id);
+    ArticleVO queryArticleVOById(Long id);
 
 }

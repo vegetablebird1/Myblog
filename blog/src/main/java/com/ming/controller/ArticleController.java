@@ -69,7 +69,7 @@ public class ArticleController {
             }
             return Result.success(article);
         }
-        article = articleService.queryArticleById(id);
+        article = articleService.queryArticleVOById(id);
         Assert.notNull(article,"该博客已被删除");
 
         try {
