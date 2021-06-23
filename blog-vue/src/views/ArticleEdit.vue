@@ -8,8 +8,8 @@
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
 
-        <el-form-item label="文章类别" prop="categoryName">
-          <el-select v-model="ruleForm.categoryName" placeholder="请输入文章类别">
+        <el-form-item label="文章类别" prop="categoryId">
+          <el-select v-model="ruleForm.categoryId" placeholder="请输入文章类别">
             <el-option v-for="category in categories" :key="category" :label="category.categoryName" :value="category.categoryId" ></el-option>
           </el-select>
         </el-form-item>
@@ -55,7 +55,7 @@ export default {
           { required: true, message: '请输入标题', trigger: 'blur' },
           { min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur' }
         ],
-        categoryName: [
+        categoryId: [
           { required: true, message: '请选择文章标签', trigger: 'blur' }
         ],
         digest: [
@@ -67,7 +67,8 @@ export default {
       },
 
       //文章种类
-      categories: {}
+      categories: {},
+      categoryName: ''
     };
   },
   methods: {
@@ -106,15 +107,14 @@ export default {
     //取出edit中的articleId参数,如果为修改操作
     const articleId = this.$route.params.articleId
     console.log(articleId)
-    const _this = this
     if (articleId) {
       getArticleDetail(articleId).then(res => {
         const article = res.data.data;
-        _this.ruleForm.articleId = article.articleId
-        _this.ruleForm.categoryName = article.categoryName
-        _this.ruleForm.title = article.title
-        _this.ruleForm.digest = article.digest
-        _this.ruleForm.content = article.content
+        this.ruleForm.articleId = article.articleId
+        this.ruleForm.categoryId = article.categoryName
+        this.ruleForm.title = article.title
+        this.ruleForm.digest = article.digest
+        this.ruleForm.content = article.content
       })
 
       getCategory().then(res => {
