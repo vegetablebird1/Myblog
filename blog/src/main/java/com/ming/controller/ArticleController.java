@@ -10,6 +10,7 @@ import com.ming.common.VO.ArticleVO;
 import com.ming.common.lang.Result;
 import com.ming.entity.Article;
 import com.ming.service.ArticleService;
+import com.ming.service.HistoryService;
 import com.ming.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,6 +40,9 @@ public class ArticleController {
     ArticleService articleService;
 
     @Autowired
+    HistoryService historyService;
+
+    @Autowired
     RedisTemplate redisTemplate;
 
     @Autowired
@@ -46,12 +51,13 @@ public class ArticleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
 
     private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
-    private static final String VIEW_NUMBER = "view:number";
 
     //分页展示所有文章
-    @GetMapping("/articles")
-    public Result list(@RequestParam(defaultValue = "1") Integer currentPage){
-        redisTemplate.opsForValue().increment(VIEW_NUMBER);
+    @GetMapping({"/articles","/"})
+    public Result list(@RequestParam(defaultValue = "1") Integer currentPage, HttpServletRequest request){
+        //增加访问记录
+        historyService.incrementViews(request.getRemoteAddr());
+        //分页查询
         Page page = new Page(currentPage,5);
         IPage iPage = articleService.page(page,new QueryWrapper<Article>().orderByDesc("create_time"));
         return Result.success(iPage);

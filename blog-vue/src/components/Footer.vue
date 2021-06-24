@@ -22,6 +22,7 @@
             <span><a href="https://github.com/vegetablebird1" title="访问github"><img src="../images/githubLogo.jpg"></a>
               <a href="https://gitee.com/jmZhao00" title="访问gitee"><img id="giteeLogo" src="../images/giteeLogo.jpg"></a>
             </span>
+            <p><span>网站累计访问数为:{{views}}</span></p>
           </div>
         </li>
       </ul>
@@ -32,8 +33,25 @@
 </template>
 
 <script>
+import {getViews} from "@/api/history";
+
 export default {
-  name: "Footer"
+  name: "Footer",
+  data() {
+    return {
+      views: ''
+    }
+  },
+
+  methods: {
+
+  },
+
+  created() {
+    getViews().then(res => {
+      this.views = res.data.data
+    })
+  }
 }
 </script>
 

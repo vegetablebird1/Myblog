@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ming
@@ -38,6 +39,17 @@ public class BlogApplicationTests {
     public void test02(){
         ArticleVO article = articleMapper.queryArticleVOById(1L);
         System.out.println(article);
+    }
+
+    @Test
+    public void test03() {
+        System.out.println(redisTemplate.opsForSet().add("list", 1));
+        Long list = redisTemplate.opsForSet().add("list", 1);
+        System.out.println(list);
+
+        redisTemplate.expire("list",1, TimeUnit.MINUTES);
+        System.out.println(redisTemplate.getExpire("list"));
+
     }
 
 }

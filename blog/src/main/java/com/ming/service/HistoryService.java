@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface HistoryService extends IService<History> {
 
+    void incrementViews(String address);
+
 }

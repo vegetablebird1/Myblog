@@ -1,9 +1,12 @@
 package com.ming.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ming.common.lang.Result;
+import com.ming.entity.History;
 import com.ming.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +31,20 @@ public class HistoryController {
     @Autowired
     HistoryService historyService;
 
+    @Value("${myBlog.domainName}")
+    private String DOMAIN_NAME;
+
     private static final String VIEW_NUMBER = "view:number";
 
     @GetMapping("/views")
     public Result getViews() {
-        Long views = (Long) redisTemplate.opsForValue().get(VIEW_NUMBER);
-        return Result.success(views);
+        Integer newNum = (Integer) redisTemplate.opsForValue().get(VIEW_NUMBER);
+        if (newNum == null) {
+            History history = historyService.getOne(new QueryWrapper<History>().eq("domain_name", DOMAIN_NAME));
+            redisTemplate.opsForValue().set(VIEW_NUMBER,history.getViewNumber());
+            return Result.success(history.getViewNumber());
+        }
+        return Result.success(newNum.longValue());
     }
 
 
