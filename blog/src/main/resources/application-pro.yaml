@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     username: root
-    password: 123456
+    password: 密码
     url: jdbc:mysql://mysql:3306/blog?useSSL=false&useUnioncode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
@@ -50,6 +50,11 @@ spring:
       # 启用
       enable: true
 
+  redis:
+    host: redis
+    port: 6379
+
+
 shiro-redis:
   enabled: true
   redis-manager:
@@ -63,5 +68,7 @@ jwt:
   header: token
 
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**Mapper.xml
+  mapper-locations: classpath*:/mapper/*Mapper.xml
 
+myBlog:
+  domainName: localhost:8000
