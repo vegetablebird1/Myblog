@@ -2,7 +2,6 @@ package com.ming.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ming.entity.History;
-import com.ming.quartz.ScheduleTask;
 import com.ming.service.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +58,7 @@ public class ListenHandler {
         Integer views = (Integer) redisTemplate.opsForValue().get(VIEW_NUMBER);
         history.setViewNumber(views.longValue());
         historyService.saveOrUpdate(history);
+        LOGGER.info("数据持久化完成");
     }
 
 }
