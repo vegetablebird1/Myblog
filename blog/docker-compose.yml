@@ -9,6 +9,7 @@ services:
     - ./nginx/html:/usr/share/nginx/html
     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     privileged: true
+    restart: always
   mysql:
     image: library/mysql:5.7
     ports:
@@ -17,6 +18,7 @@ services:
     - ./mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=密码
+    restart: always
   redis:
     image: library/redis:latest
     ports:
@@ -24,6 +26,7 @@ services:
     volumes:
       - ./redis/data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: always
   myblog:
     build: .
     image: myblog:1.1
@@ -32,3 +35,4 @@ services:
     depends_on:
       - mysql
       - redis
+    restart: always

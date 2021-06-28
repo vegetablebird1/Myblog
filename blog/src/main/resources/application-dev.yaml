@@ -55,6 +55,15 @@ spring:
     host: 127.0.0.1
     port: 6379
 
+  #cache配置
+  cache:
+    type: redis
+    redis:
+      time-to-live: 360000
+#      key-prefix: CACHE_ 前缀
+      use-key-prefix: true
+      cache-null-values: true
+
 shiro-redis:
     enabled: true
     redis-manager:

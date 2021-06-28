@@ -1,9 +1,7 @@
 package com.ming.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.VO.ArticleVO;
@@ -11,11 +9,9 @@ import com.ming.common.lang.Result;
 import com.ming.entity.Article;
 import com.ming.service.ArticleService;
 import com.ming.service.HistoryService;
-import com.ming.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
@@ -54,12 +50,11 @@ public class ArticleController {
 
     //分页展示所有文章
     @GetMapping({"/articles","/"})
-    public Result list(@RequestParam(defaultValue = "1") Integer currentPage, HttpServletRequest request){
+    public Result list(@RequestParam(defaultValue = "1") Long currentPage, HttpServletRequest request){
         //增加访问记录
         historyService.incrementViews(request.getRemoteAddr());
-        //分页查询
-        Page page = new Page(currentPage,5);
-        IPage iPage = articleService.page(page,new QueryWrapper<Article>().orderByDesc("create_time"));
+
+        IPage<Article> iPage = articleService.queryPage(currentPage,5);
         return Result.success(iPage);
     }
 
@@ -92,23 +87,7 @@ public class ArticleController {
     @RequiresAuthentication
     @PostMapping("/article/edit")
     public Result edit(@Validated @RequestBody Article article){
-        Article temp = null;
-        if (article.getArticleId() == null){
-            //说明为新建
-            temp = new Article();
-            temp.setUserId(ShiroUtils.getProfile().getUserId());//设置文章用户id当前用户
-        }else {
-            //编辑状态
-            temp = articleService.getById(article.getArticleId());
-            Assert.isTrue(temp.getUserId().equals(ShiroUtils.getProfile().getUserId()),"你不能修改其他人文章");
-        }
-        BeanUtils.copyProperties(article,temp,"articleId","userId","create_time","update_time");
-
-        if(article.getArticleId() != null) {
-            redisTemplate.delete(ARTICLE_PREFIX_NAME + article.getArticleId());
-        }
-
-        articleService.saveOrUpdate(temp);
+        articleService.saveOrUpdateArticle(article);
         return Result.success(null);
     }
 
