@@ -2,7 +2,6 @@ package com.ming.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.VO.ArticleVO;
 import com.ming.common.lang.Result;
@@ -19,11 +18,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author ming
@@ -49,44 +47,29 @@ public class ArticleController {
     private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
 
     //分页展示所有文章
-    @GetMapping({"/articles","/"})
-    public Result list(@RequestParam(defaultValue = "1") Long currentPage, HttpServletRequest request){
+    @GetMapping({"/articles", "/"})
+    public Result list(@RequestParam(defaultValue = "1") Long currentPage, HttpServletRequest request) {
         //增加访问记录
         historyService.incrementViews(request.getRemoteAddr());
 
-        IPage<Article> iPage = articleService.queryPage(currentPage,5);
+        IPage<Article> iPage = articleService.queryPage(currentPage, 5);
         return Result.success(iPage);
     }
 
     //查询文章详情
     @GetMapping("/article/{id}")
-    public Result detail(@PathVariable Long id){
-        ArticleVO article = null;
-        String articleInfo = (String) redisTemplate.opsForValue().get(ARTICLE_PREFIX_NAME + id);
-        if (articleInfo != null) {
-            try {
-                article = objectMapper.readValue(articleInfo, ArticleVO.class);
-            } catch (JsonProcessingException e) {
-                LOGGER.error("JSON反序列化出错",e);
-            }
-            return Result.success(article);
-        }
-        article = articleService.queryArticleVOById(id);
-        Assert.notNull(article,"该博客已被删除");
+    public Result detail(@PathVariable Long id) {
 
-        try {
-            articleInfo = objectMapper.writeValueAsString(article);
-            redisTemplate.opsForValue().set(ARTICLE_PREFIX_NAME + id, articleInfo, 5, TimeUnit.MINUTES);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("JSON序列化出错",e);
-        }
+        ArticleVO article = articleService.queryArticleVOById(id);
+        Assert.notNull(article, "该博客已被删除或不存在");
+
         return Result.success(article);
     }
 
     //编辑或添加文章,需要认证
     @RequiresAuthentication
     @PostMapping("/article/edit")
-    public Result edit(@Validated @RequestBody Article article){
+    public Result edit(@Validated @RequestBody Article article) {
         articleService.saveOrUpdateArticle(article);
         return Result.success(null);
     }
@@ -95,13 +78,13 @@ public class ArticleController {
     //删除文章
     @RequiresAuthentication
     @GetMapping("/article/delete/{id}")
-    public Result delete(@PathVariable Long id){
+    public Result delete(@PathVariable Long id) {
         //逻辑删除，管理员可回收
         boolean flag = articleService.removeById(id);
-        if (flag){
+        if (flag) {
             redisTemplate.delete(ARTICLE_PREFIX_NAME + id);
             return Result.success("删除成功");
-        }else {
+        } else {
             return Result.fail("删除失败");
         }
     }

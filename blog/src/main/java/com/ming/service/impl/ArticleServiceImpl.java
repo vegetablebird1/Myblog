@@ -4,18 +4,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.VO.ArticleVO;
 import com.ming.entity.Article;
 import com.ming.mapper.ArticleMapper;
 import com.ming.service.ArticleService;
 import com.ming.utils.ShiroUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -26,10 +30,14 @@ import org.springframework.util.Assert;
  * @since 2021-05-05
  */
 @Service
+@Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Autowired
     ArticleMapper articleMapper;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -38,7 +46,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleVO queryArticleVOById(Long id) {
-        return articleMapper.queryArticleVOById(id);
+        ArticleVO article = null;
+        String articleInfo = (String) redisTemplate.opsForValue().get(ARTICLE_PREFIX_NAME + id);
+        if (StringUtils.hasText(articleInfo)) {
+            try {
+                article = objectMapper.readValue(articleInfo,ArticleVO.class);
+            } catch (JsonProcessingException e) {
+                log.error("JSON反序列化出错",e);
+            }
+            return article;
+        } else if (redisTemplate.hasKey(ARTICLE_PREFIX_NAME + id)) {
+            log.error("用户访问了不存在的文章");
+            return null;
+        }
+        article = articleMapper.queryArticleVOById(id);
+        if (article != null) {
+            try {
+                articleInfo = objectMapper.writeValueAsString(article);
+                redisTemplate.opsForValue().set(ARTICLE_PREFIX_NAME + id, articleInfo, 5, TimeUnit.MINUTES);
+            } catch (JsonProcessingException e) {
+                log.error("JSON序列化出错", e);
+            }
+        } else {
+            //缓存空数据
+            redisTemplate.opsForValue().set(ARTICLE_PREFIX_NAME + id, "", 5, TimeUnit.MINUTES);
+        }
+        return article;
     }
 
     //TODO 分页缓存不符合预期

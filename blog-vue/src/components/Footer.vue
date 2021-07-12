@@ -26,6 +26,8 @@
           </div>
         </li>
       </ul>
+      <div id="bottom_nav"><a href="https://beian.miit.gov.cn">网站备案号:
+        粤ICP备2021094595号-1</a></div>
     </div>
 
 
@@ -107,6 +109,11 @@ li {
 #giteeLogo {
   position: relative;
   left: 60px;
+}
+
+#bottom_nav {
+  position: relative;
+  color: black;
 }
 
 </style>
