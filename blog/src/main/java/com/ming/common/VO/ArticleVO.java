@@ -1,6 +1,5 @@
 package com.ming.common.VO;
 
-import com.ming.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author ming
@@ -37,4 +37,9 @@ public class ArticleVO implements Serializable {
 
     @NotBlank(message = "内容不能为空")
     private String content;
+
+    /**
+     * 文章评论
+     */
+    private List<CommentVo> comments;
 }

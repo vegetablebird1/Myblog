@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.VO.ArticleVO;
+import com.ming.common.VO.CommentVo;
 import com.ming.common.constant.RedisConstant;
 import com.ming.common.enumeration.ArticleStatusCode;
 import com.ming.common.exception.ArticleException;
 import com.ming.entity.Article;
 import com.ming.mapper.ArticleMapper;
 import com.ming.service.ArticleService;
+import com.ming.service.CommentService;
 import com.ming.utils.ShiroUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,6 +38,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     ArticleMapper articleMapper;
@@ -87,6 +93,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
             //查数据库
             article = articleMapper.queryArticleVOById(id);
+            List<CommentVo> comments = commentService.getComments(id);
+            if (article != null && comments != null) {
+                article.setComments(comments);
+            }
             if (article != null) {
                 articleInfo = objectMapper.writeValueAsString(article);
                 redisTemplate.opsForValue().set(RedisConstant.ARTICLE_PREFIX_NAME + id, articleInfo, 5, TimeUnit.MINUTES);
