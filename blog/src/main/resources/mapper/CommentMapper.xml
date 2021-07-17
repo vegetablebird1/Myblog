@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ming.mapper.CommentMapper">
+
+    <select id="getComments" resultType="com.ming.common.VO.CommentVo">
+        select t1.comment_id,t1.article_id,t1.parent_id,t1.content,t1.user_id,t1.create_time,
+               t2.username,t2.avatar
+        from t_comment t1, t_user t2
+        where t1.article_id=#{articleId} and t2.user_id=t1.user_id
+    </select>
+</mapper>
