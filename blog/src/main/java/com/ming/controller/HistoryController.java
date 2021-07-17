@@ -2,6 +2,7 @@ package com.ming.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ming.common.constant.RedisConstant;
 import com.ming.common.lang.Result;
 import com.ming.entity.History;
 import com.ming.service.HistoryService;
@@ -34,14 +35,12 @@ public class HistoryController {
     @Value("${myBlog.domainName}")
     private String DOMAIN_NAME;
 
-    private static final String VIEW_NUMBER = "view:number";
-
     @GetMapping("/views")
     public Result getViews() {
-        Integer newNum = (Integer) redisTemplate.opsForValue().get(VIEW_NUMBER);
+        Integer newNum = (Integer) redisTemplate.opsForValue().get(RedisConstant.VIEW_NUMBER);
         if (newNum == null) {
             History history = historyService.getOne(new QueryWrapper<History>().eq("domain_name", DOMAIN_NAME));
-            redisTemplate.opsForValue().set(VIEW_NUMBER,history.getViewNumber());
+            redisTemplate.opsForValue().set(RedisConstant.VIEW_NUMBER, history.getViewNumber());
             return Result.success(history.getViewNumber());
         }
         return Result.success(newNum.longValue());

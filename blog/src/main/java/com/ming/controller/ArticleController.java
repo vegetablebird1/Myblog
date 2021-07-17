@@ -4,13 +4,14 @@ package com.ming.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ming.common.VO.ArticleVO;
+import com.ming.common.constant.RedisConstant;
 import com.ming.common.lang.Result;
 import com.ming.entity.Article;
+import com.ming.factory.ThreadPoolFactory;
 import com.ming.service.ArticleService;
 import com.ming.service.HistoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
@@ -18,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * <p>
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2021-05-05
  */
 @RestController
+@Slf4j
 public class ArticleController {
 
     @Autowired
@@ -42,15 +46,15 @@ public class ArticleController {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
-
-    private static final String ARTICLE_PREFIX_NAME = "queryArticleById:";
+    private final ExecutorService threadPool = ThreadPoolFactory.createDefaultThreadPool("articleController");
 
     //分页展示所有文章
     @GetMapping({"/articles", "/"})
     public Result list(@RequestParam(defaultValue = "1") Long currentPage, HttpServletRequest request) {
-        //增加访问记录
-        historyService.incrementViews(request.getRemoteAddr());
+        CompletableFuture.runAsync(() -> {
+            //增加访问记录
+            historyService.incrementViews(request.getRemoteAddr());
+        }, threadPool);
 
         IPage<Article> iPage = articleService.queryPage(currentPage, 5);
         return Result.success(iPage);
@@ -82,9 +86,11 @@ public class ArticleController {
         //逻辑删除，管理员可回收
         boolean flag = articleService.removeById(id);
         if (flag) {
-            redisTemplate.delete(ARTICLE_PREFIX_NAME + id);
+            redisTemplate.delete(RedisConstant.ARTICLE_PREFIX_NAME + id);
+            log.info("删除文章: {} 成功", id);
             return Result.success("删除成功");
         } else {
+            log.error("删除文章: {} 失败", id);
             return Result.fail("删除失败");
         }
     }

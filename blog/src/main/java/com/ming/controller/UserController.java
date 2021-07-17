@@ -30,8 +30,10 @@ public class UserController {
         return Result.success(200,"操作成功",user);
     }
 
-    @PostMapping("/save")
-    public Result save(@Validated @RequestBody User user){
-        return Result.success(user);
+    @PostMapping("/register")
+    public Result register(@Validated @RequestBody User user){
+        userService.register(user);
+
+        return Result.success("注册成功");
     }
 }

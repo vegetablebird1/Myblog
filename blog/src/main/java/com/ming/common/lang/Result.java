@@ -24,6 +24,10 @@ public class Result implements Serializable {
         return success(200,"操作成功",data);
     }
 
+    public static Result success(String msg) {
+        return success(200,msg,null);
+    }
+
     public static Result fail(Integer code,String msg,Object data) {
         Result result = new Result();
         result.setCode(code);
