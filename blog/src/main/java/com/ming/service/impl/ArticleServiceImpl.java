@@ -58,6 +58,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (StringUtils.hasText(articleInfo)) {
             try {
                 article = objectMapper.readValue(articleInfo, ArticleVO.class);
+                List<CommentVo> comments = commentService.getComments(id);
+                article.setComments(comments);
             } catch (JsonProcessingException e) {
                 log.error("JSON反序列化出错", e);
             }

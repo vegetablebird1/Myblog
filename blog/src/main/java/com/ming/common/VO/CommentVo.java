@@ -42,5 +42,5 @@ public class CommentVo implements Serializable {
     /**
      * 子评论
      */
-    List<CommentVo> child;
+    List<CommentVo> children;
 }

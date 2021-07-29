@@ -33,11 +33,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         List<CommentVo> allComment = commentMapper.getComments(articleId);
         List<CommentVo> res = allComment.stream()
                 .map(comment -> {
-                    comment.setChild(getSonComment(comment.getCommentId(), allComment));
+                    comment.setChildren(getSonComment(comment.getCommentId(), allComment));
                     return comment;
                 })
                 //获得所有1级评论
-                .filter(comment -> comment.getParentId() == null)
+                .filter(comment -> comment.getParentId() == 0)
                 .collect(Collectors.toList());
         return res;
     }
@@ -57,7 +57,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             return false;
         }
         comment.setUserId(userId);
-        log.info("用户: {} 进行了评论",userId);
+        log.info("用户: {} 进行了评论", userId);
         return this.save(comment);
 
     }

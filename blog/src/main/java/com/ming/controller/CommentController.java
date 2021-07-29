@@ -8,6 +8,7 @@ import com.ming.service.CommentService;
 import com.ming.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class CommentController {
 
     @RequiresAuthentication
     @PostMapping("/add")
-    public Result addComment(@RequestBody Comment comment) {
+    public Result addComment(@Validated @RequestBody Comment comment) {
         boolean save = commentService.addComment(comment, userId.get());
         if (save) {
             return Result.success("评论成功");

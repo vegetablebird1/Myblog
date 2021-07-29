@@ -1,9 +1,12 @@
 package com.ming;
 
 import com.ming.common.VO.ArticleVO;
+import com.ming.common.VO.CommentVo;
 import com.ming.entity.Category;
 import com.ming.mapper.ArticleMapper;
+import com.ming.mapper.CommentMapper;
 import com.ming.service.CategoryService;
+import com.ming.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +31,12 @@ public class BlogApplicationTests {
     ArticleMapper articleMapper;
 
     @Autowired
+    CommentMapper commentMapper;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
     CategoryService categoryService;
     @Test
     public void test01(){
@@ -50,6 +59,12 @@ public class BlogApplicationTests {
         redisTemplate.expire("list",1, TimeUnit.MINUTES);
         System.out.println(redisTemplate.getExpire("list"));
 
+    }
+
+    @Test
+    public void test04() {
+        List<CommentVo> comments = commentService.getComments(1L);
+        System.out.println(comments);
     }
 
 }

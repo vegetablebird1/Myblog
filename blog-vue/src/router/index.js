@@ -6,6 +6,7 @@ import ArticleEdit from "@/views/ArticleEdit";
 import ArticleDetail from "@/views/ArticleDetail";
 import TimeLine from "@/views/TimeLine";
 import AboutMe from "@/views/AboutMe";
+import Register from "@/views/Register";
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,11 @@ const routes = [
         path: '/aboutMe',
         name: 'AboutMe',
         component: AboutMe
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     }
 ]
 

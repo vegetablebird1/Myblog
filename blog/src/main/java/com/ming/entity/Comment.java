@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -35,18 +37,18 @@ public class Comment implements Serializable {
     private Long commentId;
 
     @ApiModelProperty(value = "评论对应文章id")
-    @NotBlank
+    @NotNull
     private Long articleId;
 
     @ApiModelProperty(value = "父评论id")
     private Long parentId;
 
     @ApiModelProperty(value = "评论内容")
-    @NotBlank
+    @NotBlank(message = "评论不能为空")
     private String content;
 
     @ApiModelProperty(value = "评论用户id")
-    @NotBlank
+    @NotNull(message = "用户未登陆,不能进行评论")
     private Long userId;
 
     @TableField(fill = FieldFill.INSERT)
