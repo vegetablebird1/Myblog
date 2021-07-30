@@ -71,4 +71,4 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
 
 myBlog:
-  domainName: localhost:8000
+  domainName: blogming.site

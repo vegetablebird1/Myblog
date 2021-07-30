@@ -1,49 +1,52 @@
 <template>
+
   <div id="login_body">
     <div><Header></Header></div>
     <div id="login_card">
       <el-card style="border-radius: 15px">
-        <div style="text-align: center;font-size: 25px;"><span>登录</span></div>
+        <div style="text-align: center;font-size: 25px;"><span>注册账号</span></div>
         <el-main>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="用户名" prop="username">
               <el-input v-model="ruleForm.username"></el-input>
             </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="ruleForm.email"></el-input>
+            </el-form-item>
             <el-form-item label="密码" prop="password">
               <el-input type="password" v-model="ruleForm.password"></el-input>
             </el-form-item>
 
-
             <el-form-item>
-              <el-button id="submit_button" type="primary" @click="submitForm('ruleForm')">登陆</el-button>
+              <el-button id="submit_button" type="primary" @click="submitForm('ruleForm')">注册</el-button>
               <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
           </el-form>
-
         </el-main>
-
-        <div id="register-link"><router-link :to="{path: '/register'}">还没账号?请点此处注册</router-link></div>
       </el-card>
 
     </div>
 
 
   </div>
+
 </template>
 
 <script>
-import {login} from "@/api/login";
+import {register} from "@/api/user"
 import router from "@/router";
 import Header from "@/components/Header";
+import Element from "element-ui";
 
 export default {
-  name: "Login",
+  name: "Register",
   components: {Header},
   data() {
     return {
       ruleForm: {
         username: '',
-        password: ''
+        password: '',
+        email: ''
       },
       rules: {
         username: [
@@ -53,45 +56,25 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'change' }
         ],
-
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur'},
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['change'] }
+        ]
       }
     };
-  },
-
-  beforeRouteEnter(to, from, next) {
-    const path = from.path
-    //放行
-    next(vm => {
-      if (path === '/register') {
-        vm.$notify({
-          title: '成功',
-          message: '恭喜你,注册成功,请登录',
-          type: 'success'
-        })
-      }
-    })
   },
 
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const _this = this;//下面axios后this会变成axios请求的this，所以要保存this，才能获取store中信息
-          login(this.ruleForm).then(res => {
-            const jwt = res.headers['authorization']
-            const userInfo = res.data.data;
+          register(this.ruleForm).then(res => {
 
-            //调用方法保存jwt,userInfo
-            _this.$store.commit("SET_TOKEN",jwt)
-            _this.$store.commit("SET_USERINFO",userInfo)
+            this.$router.push({path: '/login'})
 
-            //获取
-            console.log(_this.$store.getters.getUser)
-
-            router.push("/articles")
           });
         } else {
-          console.log('error submit!!')
+          Element.Message.error("请输入正确的信息");
           return false
         }
       });
@@ -151,8 +134,5 @@ body > .el-container {
   left: -40px;
 }
 
-#register-link {
-  text-align: center;
-}
 
 </style>

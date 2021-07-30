@@ -5,7 +5,7 @@
 
 
     <div id="articles_body" v-cloak>
-      <el-card class="box-card" v-for="article in articles" :key="article">
+      <el-card class="box-card" v-for="(article,index) in articles" :key="index">
         <span id="a_title">
           <router-link class="a_detailLink" :to="{name: 'ArticleDetail',params: {articleId: article.articleId}}">
             {{article.title}}

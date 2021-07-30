@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -24,12 +26,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    private Map<Long, List<CommentVo>> commentsMap = new ConcurrentHashMap<>();
+
     @Autowired
     CommentMapper commentMapper;
 
     //根据文章id获得评论
     @Override
     public List<CommentVo> getComments(Long articleId) {
+        List<CommentVo> commentVos = commentsMap.get(articleId);
+        if (commentVos != null) return commentVos;
+
         List<CommentVo> allComment = commentMapper.getComments(articleId);
         List<CommentVo> res = allComment.stream()
                 .map(comment -> {
@@ -39,6 +46,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 //获得所有1级评论
                 .filter(comment -> comment.getParentId() == 0)
                 .collect(Collectors.toList());
+        commentsMap.put(articleId, res);
         return res;
     }
 
@@ -58,7 +66,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
         comment.setUserId(userId);
         log.info("用户: {} 进行了评论", userId);
+        commentsMap.remove(comment.getArticleId());
         return this.save(comment);
-
     }
 }
